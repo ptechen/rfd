@@ -108,10 +108,16 @@ impl FileDialog {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-use crate::backend::{FilePickerDialogImpl, FileSaveDialogImpl, FolderPickerDialogImpl};
+use crate::backend::{
+    FileOrFolderPickerDialogImpl, FilePickerDialogImpl, FileSaveDialogImpl, FolderPickerDialogImpl,
+};
 
 #[cfg(not(target_arch = "wasm32"))]
 impl FileDialog {
+    /// Pick one file or folder
+    pub fn pick_file_or_folder(self) -> Option<PathBuf> {
+        FileOrFolderPickerDialogImpl::pick_file_or_folder(self)
+    }
     /// Pick one file
     pub fn pick_file(self) -> Option<PathBuf> {
         FilePickerDialogImpl::pick_file(self)
@@ -229,14 +235,18 @@ impl AsyncFileDialog {
     }
 }
 
+use crate::backend::AsyncFileOrFolderPickerDialogImpl;
 use crate::backend::AsyncFilePickerDialogImpl;
 use crate::backend::AsyncFileSaveDialogImpl;
 #[cfg(not(target_arch = "wasm32"))]
 use crate::backend::AsyncFolderPickerDialogImpl;
-
 use std::future::Future;
 
 impl AsyncFileDialog {
+    /// Pick one file or one folder
+    pub fn pick_file_or_folder(self) -> impl Future<Output = Option<FileHandle>> {
+        AsyncFileOrFolderPickerDialogImpl::pick_file_or_folder_async(self.file_dialog)
+    }
     /// Pick one file
     pub fn pick_file(self) -> impl Future<Output = Option<FileHandle>> {
         AsyncFilePickerDialogImpl::pick_file_async(self.file_dialog)

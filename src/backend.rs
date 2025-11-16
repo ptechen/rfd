@@ -70,6 +70,11 @@ pub trait FolderPickerDialogImpl {
     fn pick_folders(self) -> Option<Vec<PathBuf>>;
 }
 
+/// Dialog used to pick file or folder
+pub trait FileOrFolderPickerDialogImpl {
+    fn pick_file_or_folder(self) -> Option<PathBuf>;
+}
+
 pub trait MessageDialogImpl {
     fn show(self) -> MessageDialogResult;
 }
@@ -95,6 +100,11 @@ pub trait AsyncFilePickerDialogImpl {
 pub trait AsyncFolderPickerDialogImpl {
     fn pick_folder_async(self) -> DialogFutureType<Option<FileHandle>>;
     fn pick_folders_async(self) -> DialogFutureType<Option<Vec<FileHandle>>>;
+}
+
+/// Dialog used to pick file or folder
+pub trait AsyncFileOrFolderPickerDialogImpl {
+    fn pick_file_or_folder_async(self) -> DialogFutureType<Option<FileHandle>>;
 }
 
 /// Dialog used to pick folder

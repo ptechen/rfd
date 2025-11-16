@@ -1,6 +1,6 @@
 fn main() {
     // Spawn dialog on main thread
-    let task = rfd::AsyncFileDialog::new().pick_file();
+    let task = rfd::AsyncFileDialog::new().pick_file_or_folder();
 
     // Await somewhere else
     execute(async {

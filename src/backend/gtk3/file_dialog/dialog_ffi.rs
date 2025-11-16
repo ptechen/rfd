@@ -224,6 +224,27 @@ impl GtkFileDialog {
         dialog
     }
 
+    pub fn build_pick_file_or_folder(opt: &FileDialog) -> Self {
+        let mut dialog = GtkFileDialog::new(
+            opt.title.as_deref().unwrap_or("Open File"),
+            GtkFileChooserAction::Open,
+        );
+
+        dialog.add_filters(&opt.filters);
+        dialog.set_path(opt.starting_directory.as_deref());
+
+        if let (Some(mut path), Some(file_name)) =
+            (opt.starting_directory.to_owned(), opt.file_name.as_deref())
+        {
+            path.push(file_name);
+            dialog.set_file_name(path.deref().to_str());
+        } else {
+            dialog.set_file_name(opt.file_name.as_deref());
+        }
+
+        dialog
+    }
+
     pub fn build_pick_folders(opt: &FileDialog) -> Self {
         let dialog = GtkFileDialog::new(
             opt.title.as_deref().unwrap_or("Select Folder"),

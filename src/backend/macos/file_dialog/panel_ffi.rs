@@ -193,6 +193,35 @@ impl Panel {
         Self::new(Retained::into_super(panel), opt.parent.as_ref())
     }
 
+    pub fn build_pick_file_or_folder(opt: &FileDialog, mtm: MainThreadMarker) -> Self {
+        let panel = unsafe { NSOpenPanel::openPanel(mtm) };
+
+        if !opt.filters.is_empty() {
+            panel.add_filters(opt);
+        }
+
+        if let Some(path) = &opt.starting_directory {
+            panel.set_path(path, opt.file_name.as_deref());
+        }
+
+        if let Some(file_name) = &opt.file_name {
+            panel.set_file_name(file_name);
+        }
+
+        if let Some(title) = &opt.title {
+            panel.set_title(title);
+        }
+
+        if let Some(can) = opt.can_create_directories {
+            panel.set_can_create_directories(can);
+        }
+
+        unsafe { panel.setCanChooseDirectories(true) };
+        unsafe { panel.setCanChooseFiles(true) };
+
+        Self::new(Retained::into_super(panel), opt.parent.as_ref())
+    }
+
     pub fn build_save_file(opt: &FileDialog, mtm: MainThreadMarker) -> Self {
         let panel = unsafe { NSSavePanel::savePanel(mtm) };
 
